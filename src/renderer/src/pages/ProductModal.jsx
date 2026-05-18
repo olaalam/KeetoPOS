@@ -17,13 +17,13 @@ export default function ProductModal({ isOpen, onClose, product, onConfirm }) {
     ];
 
     // تصفير وإعادة تعيين القيم عند فتح المودال لمنتج جديد
-    useEffect(() => {
-        if (isOpen) {
-            setQuantity(1);
-            setSpecialInstructions('');
-            setSelectedExtras({});
-        }
-    }, [isOpen, product]); // يشتغل كل ما المودال يفتح أو المنتج يتغير
+useEffect(() => {
+    if (isOpen && product) {
+        setQuantity(product.qty || 1); // 👈 لو فيه كمية سابقة يقرأها، وإلا يحط 1
+        setSpecialInstructions(product.instructions || ''); // 👈 يقرأ التعليمات السابقة إن وجدت
+        setSelectedExtras(product.extras || {}); // 👈 يقرأ الإضافات المختارة سابقاً بدلاً من تفريغها
+    }
+}, [isOpen, product]);
 
     // حساب السعر الإجمالي عند كل تغيير
     useEffect(() => {

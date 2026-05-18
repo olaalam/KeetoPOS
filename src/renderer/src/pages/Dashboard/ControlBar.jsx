@@ -7,7 +7,9 @@ export default function ControlBar({
   toggleType, 
   setToggleType,
   priceType,
-  setPriceType
+  setPriceType,
+  viewMode,
+  setViewMode
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -74,8 +76,8 @@ export default function ControlBar({
   return (
     <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm relative z-30">
       
-      {/* Price Selection Dropdown with Custom Modules */}
-      <div className="relative w-full md:w-auto md:min-w-[240px]" ref={dropdownRef}>
+      {/* Price Selection Dropdown with Custom Modules — مخفي في grid mode */}
+      <div className={`relative w-full md:w-auto md:min-w-[240px] ${viewMode === 'grid' ? 'hidden' : ''}`} ref={dropdownRef}>
         
         {/* Active Selected Button */}
         <button
@@ -137,8 +139,8 @@ export default function ControlBar({
 
       </div>
 
-      {/* Search Input */}
-      <div className="w-full md:flex-1 md:max-w-md relative">
+      {/* Search Input — مخفي في grid mode */}
+      <div className={`w-full md:flex-1 md:max-w-md relative ${viewMode === 'grid' ? 'hidden' : ''}`}>
         <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
         <input
           type="text"
@@ -149,8 +151,8 @@ export default function ControlBar({
         />
       </div>
 
-      {/* Segmented Control Toggle */}
-      <div className="w-full md:w-auto flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+      {/* Segmented Control Toggle — مخفي في grid mode */}
+      <div className={`w-full md:w-auto flex bg-slate-100 p-1 rounded-xl border border-slate-200 ${viewMode === 'grid' ? 'hidden' : ''}`}>
         {['By Piece', 'By Weight'].map((type) => (
           <button
             key={type}
@@ -165,6 +167,29 @@ export default function ControlBar({
           </button>
         ))}
       </div>
+      <div className="flex bg-slate-100 p-1 rounded-xl gap-1">
+                <button
+                    onClick={() => setViewMode('grid')}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                        viewMode === 'grid' 
+                        ? 'bg-white text-slate-800 shadow-sm' 
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                >
+                    عرض شبكي
+                </button>
+                <button
+                    onClick={() => setViewMode('normal')}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                        viewMode === 'normal' 
+                        ? 'bg-white text-slate-800 shadow-sm' 
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                >
+                    الشكل الحالي
+                </button>
+            </div>
+       
 
     </div>
   );

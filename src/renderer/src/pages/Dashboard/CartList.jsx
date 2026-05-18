@@ -1,6 +1,6 @@
 import { Trash2 } from 'lucide-react';
 
-export default function CartList({ cartItems = [], onRemoveItem, onClearCart }) {
+export default function CartList({ cartItems = [], onRemoveItem, onClearCart, onOpenProductModal }) {
     return (
         <div className="flex-1 flex flex-col overflow-hidden p-4">
 
@@ -43,7 +43,13 @@ export default function CartList({ cartItems = [], onRemoveItem, onClearCart }) 
                                 <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
                                     {item.qty}x
                                 </span>
-                                <span className="text-xs font-bold text-slate-700 truncate leading-tight">
+                                <span
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // يمنع تكرار الـ click على الـ div الخارجي
+                                        onOpenProductModal && onOpenProductModal(item); // 👈 تعديل: تم تغيير product إلى item
+                                    }}
+                                    className="text-xs font-bold text-slate-700 truncate leading-tight cursor-pointer hover:text-primary transition-colors"
+                                >
                                     {item.name}
                                 </span>
                             </div>

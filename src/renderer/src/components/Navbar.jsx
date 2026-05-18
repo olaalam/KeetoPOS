@@ -117,7 +117,7 @@ export default function Navbar() {
                 </div>
 
                 {/* CENTER: Logo */}
-                <div className="flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+                <div className="flex items-center gap-1 absolute left-[60%] -translate-x-[60%]">
                     <img src={logo} alt="logo" className="h-14 w-14 lg:h-20 lg:w-20" />
                 </div>
 
