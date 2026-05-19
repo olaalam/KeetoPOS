@@ -72,10 +72,10 @@ export default function ControlBar({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm relative z-30">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm relative z-30">
       
       {/* Price Selection Dropdown with Custom Modules */}
-      <div className="relative min-w-[240px]" ref={dropdownRef}>
+      <div className="relative w-full md:w-auto md:min-w-[240px]" ref={dropdownRef}>
         
         {/* Active Selected Button */}
         <button
@@ -138,7 +138,7 @@ export default function ControlBar({
       </div>
 
       {/* Search Input */}
-      <div className="flex-1 max-w-md relative">
+      <div className="w-full md:flex-1 md:max-w-md relative">
         <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
         <input
           type="text"
@@ -150,12 +150,12 @@ export default function ControlBar({
       </div>
 
       {/* Segmented Control Toggle */}
-      <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+      <div className="w-full md:w-auto flex bg-slate-100 p-1 rounded-xl border border-slate-200">
         {['By Piece', 'By Weight'].map((type) => (
           <button
             key={type}
             onClick={() => setToggleType(type)}
-            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`flex-1 md:flex-none px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
               toggleType === type
                 ? 'bg-white text-slate-800 shadow-sm'
                 : 'text-slate-500 hover:text-slate-800'

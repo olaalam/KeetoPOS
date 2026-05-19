@@ -1,6 +1,6 @@
-import { Search } from 'lucide-react';
+import { Search, Plus } from 'lucide-react'; // ضفنا أيقونة Plus للمظهر الجمالي
 
-// 1. مصفوفة الداتا الوهمية (Mock Data) للتجربة وعرض المنتجات
+// 1. مصفوفة الداتا الوهمية (Mock Data)
 const MOCK_PRODUCTS = [
     { id: 1, name: 'Strawberry Sundae Ice Cream', price: 45.00, category: 'Sundae', color: 'bg-pink-50 text-pink-500 border-pink-100' },
     { id: 2, name: 'Chocolate Chimney Cake', price: 65.00, category: 'Chimney', color: 'bg-amber-50 text-amber-700 border-amber-100' },
@@ -10,12 +10,13 @@ const MOCK_PRODUCTS = [
     { id: 6, name: 'Croissant Mix Cheese', price: 50.00, category: 'new breakfast', color: 'bg-indigo-50 text-indigo-600 border-indigo-100' },
 ];
 
-export default function ProductGrid({ products = [] }) {
+// استقبلنا هنا الـ onAddToCart كـ Prop
+export default function ProductGrid({ products = [], onAddToCart }) {
 
-    // إذا كانت الـ props فاضية، هنعرض الداتا الوهمية تلقائياً عشان نشوف التصميم
+    // إذا كانت الـ props فاضية، هنعرض الداتا الوهمية تلقائياً
     const displayProducts = products.length > 0 ? products : MOCK_PRODUCTS;
 
-    // في حالة لو مفيش منتجات خالص (الداتا الوهمية والحقيقية فاضية)
+    // في حالة لو مفيش منتجات خالص
     if (displayProducts.length === 0) {
         return (
             <div className="flex-1 bg-white rounded-3xl border border-slate-200/80 shadow-sm flex flex-col items-center justify-center p-8">
@@ -29,18 +30,21 @@ export default function ProductGrid({ products = [] }) {
     }
 
     return (
-        // شبكة المنتجات: هتعرض 3 كروت في الصف الواحد على الشاشات العادية، وبتعمل سكرول لو المنتجات كترت
-        <div className="flex-1 grid grid-cols-3 gap-4 overflow-y-auto pr-1 auto-rows-max">
+        // شبكة المنتجات
+        <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 overflow-y-auto pr-1 auto-rows-max pb-8 lg:pb-0">
 
             {displayProducts.map((product) => (
                 <div
                     key={product.id}
+                    // عند الضغط على الكارت بالكامل يتم إرسال المنتج للسلة
+                    onClick={() => onAddToCart && onAddToCart(product)}
                     className="bg-white border border-slate-200/60 rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md hover:border-slate-300 cursor-pointer transition-all duration-200 group active:scale-[0.98]"
                 >
-                    {/* صورة افتراضية للمنتج (لحين رفع صور حقيقية) */}
-                    <div className={`w-full h-28 rounded-xl border flex flex-col items-center justify-center font-bold text-xs gap-1 ${product.color}`}>
+                    {/* صورة افتراضية للمنتج */}
+                    <div className={`w-full h-28 rounded-xl border flex flex-col items-center justify-center font-bold text-xs gap-1 relative overflow-hidden ${product.color}`}>
                         <span className="text-lg">🍦</span>
                         <span>{product.name.split(' ').slice(0, 2).join(' ')}</span>
+
                     </div>
 
                     {/* تفاصيل المنتج ( الاسم، التصنيف، السعر) */}
@@ -58,6 +62,15 @@ export default function ProductGrid({ products = [] }) {
                             </span>
                         </div>
                     </div>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onAddToCart && onAddToCart(product);
+                        }}
+                        className="w-full mt-3 bg-primary hover:bg-primary/80 text-white text-[11px] font-bold py-2 px-4 rounded-lg transition-colors duration-150 active:scale-[0.98]"
+                    >
+                        Add to Order
+                    </button>
 
                 </div>
             ))}

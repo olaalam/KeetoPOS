@@ -55,6 +55,48 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
+  // ─── Silent Receipt Printing ───
+  // بيستقبل HTML الريسيت من الـ renderer، يفتح نافذة مخفية، يطبع ويقفل
+  ipcMain.handle('print-receipt-silent', async (_event, receiptHTML) => {
+    return new Promise((resolve) => {
+      // نافذة مخفية مخصصة للطباعة فقط
+      const printWindow = new BrowserWindow({
+        show: false,
+        width: 300,
+        height: 600,
+        webPreferences: {
+          sandbox: true
+        }
+      })
+
+      // نحمل الـ HTML مباشرة في النافذة المخفية
+      printWindow.loadURL(
+        `data:text/html;charset=utf-8,${encodeURIComponent(receiptHTML)}`
+      )
+
+      printWindow.webContents.on('did-finish-load', () => {
+        // نطبع بشكل صامت على الطابعة الافتراضية
+        printWindow.webContents.print(
+          {
+            silent: true,
+            printBackground: true,
+            deviceName: '',
+            margins: { marginType: 'none' },
+            pageSize: { width: 80000, height: 297000 } // 80mm عرض للطابعة الحرارية
+          },
+          (success, errorType) => {
+            // نقفل النافذة المخفية بعد الطباعة
+            printWindow.close()
+            if (!success) {
+              console.error('Print failed:', errorType)
+            }
+            resolve({ success, errorType: errorType || null })
+          }
+        )
+      })
+    })
+  })
+
   createWindow()
 
   app.on('activate', function () {
