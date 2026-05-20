@@ -51,11 +51,11 @@ export default function CheckoutModal({ isOpen, onClose, totalAmount, onPay }) {
                                     key={method.id}
                                     onClick={() => setSelectedMethod(method.id)}
                                     className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all ${isSelected
-                                            ? 'border-red-600 bg-red-50/50 text-red-600 shadow-sm'
+                                            ? 'border-primary bg-primary/50 text-primary shadow-sm'
                                             : 'border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50'
                                         }`}
                                 >
-                                    <Icon className={`h-6 w-6 mb-2 ${isSelected ? 'text-red-600' : 'text-slate-400'}`} />
+                                    <Icon className={`h-6 w-6 mb-2 ${isSelected ? 'text-primary' : 'text-slate-400'}`} />
                                     <span className="text-[11px] font-bold text-center capitalize leading-tight">
                                         {method.label}
                                     </span>
@@ -74,7 +74,7 @@ export default function CheckoutModal({ isOpen, onClose, totalAmount, onPay }) {
                                 placeholder={totalAmount.toFixed(2)}
                                 value={customerAmount}
                                 onChange={(e) => setCustomerAmount(e.target.value)}
-                                className="w-full h-14 pl-12 pr-4 rounded-xl border-2 border-slate-200 bg-slate-50/50 text-lg font-black focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all"
+                                className="w-full h-14 pl-12 pr-4 rounded-xl border-2 border-slate-200 bg-slate-50/50 text-lg font-black focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
                             />
                         </div>
                     </div>
@@ -82,13 +82,13 @@ export default function CheckoutModal({ isOpen, onClose, totalAmount, onPay }) {
 
                 {/* Footer */}
                 <div className="p-6 border-t border-slate-100 flex flex-col items-center gap-4 bg-slate-50/30">
-                    <div className="text-3xl font-black text-red-700 font-mono">
+                    <div className="text-3xl font-black text-primary font-mono">
                         {totalAmount.toFixed(2)} EGP
                     </div>
 
                     <button
                         onClick={handlePayment}
-                        className="w-full bg-red-800 hover:bg-red-900 text-white rounded-xl py-4 font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-red-200"
+                        className="w-full bg-primary hover:bg-primary/80 text-white rounded-xl py-4 font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-primary"
                     >
                         PAY NOW
                     </button>

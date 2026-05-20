@@ -16,6 +16,15 @@ export default function ProductModal({ isOpen, onClose, product, onConfirm }) {
         { id: 'v4', name: 'Chocolate Crème', price: 10.00 },
     ];
 
+    // تصفير وإعادة تعيين القيم عند فتح المودال لمنتج جديد
+    useEffect(() => {
+        if (isOpen) {
+            setQuantity(1);
+            setSpecialInstructions('');
+            setSelectedExtras({});
+        }
+    }, [isOpen, product]); // يشتغل كل ما المودال يفتح أو المنتج يتغير
+
     // حساب السعر الإجمالي عند كل تغيير
     useEffect(() => {
         if (!product) return;
@@ -51,14 +60,32 @@ export default function ProductModal({ isOpen, onClose, product, onConfirm }) {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
 
-                {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-100">
-                    <div>
-                        <h2 className="text-2xl font-black text-slate-800">{product.name}</h2>
-                        <p className="text-slate-400 text-sm mt-1">No description available</p>
+                {/* Header مع صورة المنتج */}
+                <div className="flex items-start justify-between p-6 border-b border-slate-100 gap-4">
+                    <div className="flex gap-4 items-center">
+                        {/* صورة المنتج - تأكدي أن كائن الـ product يحتوي على حقل image */}
+                        <div className="w-20 h-20 rounded-2xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-100">
+                            {product.image ? (
+                                <img 
+                                    src={product.image} 
+                                    alt={product.name} 
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-xs text-slate-400 font-bold bg-slate-100">
+                                    No Image
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div>
+                            <h2 className="text-2xl font-black text-slate-800">{product.name}</h2>
+                            <p className="text-slate-400 text-sm mt-1">No description available</p>
+                        </div>
                     </div>
+
                     <div className="flex items-center gap-4">
-                        <span className="text-xl font-black text-red-600 font-mono">
+                        <span className="text-xl font-black text-primary font-mono whitespace-nowrap">
                             {product.price.toFixed(2)} EGP
                         </span>
                         <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
@@ -89,7 +116,7 @@ export default function ProductModal({ isOpen, onClose, product, onConfirm }) {
                                         <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-1">
                                             <button
                                                 onClick={() => updateExtraQty(item, -1)}
-                                                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors"
+                                                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-primary text-slate-400 hover:text-black transition-colors"
                                             >
                                                 <Minus className="h-3 w-3" />
                                             </button>
@@ -98,7 +125,7 @@ export default function ProductModal({ isOpen, onClose, product, onConfirm }) {
                                             </span>
                                             <button
                                                 onClick={() => updateExtraQty(item, 1)}
-                                                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors"
+                                                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-primary text-slate-400 hover:text-black transition-colors"
                                             >
                                                 <Plus className="h-3 w-3" />
                                             </button>
@@ -116,7 +143,7 @@ export default function ProductModal({ isOpen, onClose, product, onConfirm }) {
                             placeholder="Add any special instructions for this item..."
                             value={specialInstructions}
                             onChange={(e) => setSpecialInstructions(e.target.value)}
-                            className="w-full h-24 p-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all resize-none"
+                            className="w-full h-24 p-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
                         />
                         <p className="text-[10px] text-right text-slate-400 mt-1">{specialInstructions.length}/200 characters</p>
                     </section>
@@ -128,14 +155,14 @@ export default function ProductModal({ isOpen, onClose, product, onConfirm }) {
                     <div className="flex items-center gap-4 bg-white border border-slate-200 rounded-xl p-1.5 px-3">
                         <button
                             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                            className="text-red-600 p-1 hover:bg-red-50 rounded-lg transition-colors"
+                            className="text-black p-1 hover:bg-primary/80 rounded-lg transition-colors"
                         >
                             <Minus className="h-4 w-4" />
                         </button>
                         <span className="text-lg font-black text-slate-800 min-w-[20px] text-center">{quantity}</span>
                         <button
                             onClick={() => setQuantity(quantity + 1)}
-                            className="text-red-600 p-1 hover:bg-red-50 rounded-lg transition-colors"
+                            className="text-black p-1 hover:bg-primary/80 rounded-lg transition-colors"
                         >
                             <Plus className="h-4 w-4" />
                         </button>
@@ -143,14 +170,17 @@ export default function ProductModal({ isOpen, onClose, product, onConfirm }) {
 
                     {/* Total & Add Button */}
                     <button
-                        onClick={() => onConfirm({
-                            ...product,
-                            qty: quantity,
-                            totalPrice: totalPrice,
-                            instructions: specialInstructions,
-                            extras: selectedExtras
-                        })}
-                        className="flex-1 ml-6 bg-red-800 hover:bg-red-900 text-white rounded-xl py-3.5 px-6 flex items-center justify-between transition-all active:scale-[0.98] shadow-lg shadow-red-200"
+                        onClick={() => {
+                            onConfirm({
+                                ...product,
+                                qty: quantity,
+                                totalPrice: totalPrice,
+                                instructions: specialInstructions,
+                                extras: selectedExtras
+                            });
+                            onClose(); // يفضل قفل المودال تلقائياً بعد تأكيد الطلب لإضافة سلاسة للمستخدم
+                        }}
+                        className="flex-1 ml-6 bg-primary hover:bg-primary/80 text-white rounded-xl py-3.5 px-6 flex items-center justify-between transition-all active:scale-[0.98] shadow-lg shadow-primary/80"
                     >
                         <div className="flex flex-col items-start leading-none">
                             <span className="text-[10px] uppercase font-bold opacity-80">Total</span>

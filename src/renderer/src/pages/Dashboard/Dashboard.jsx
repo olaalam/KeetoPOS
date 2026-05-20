@@ -11,6 +11,7 @@ import ProductModal from '../ProductModal';
 import CheckoutModal from '../CheckoutModal';
 import ReceiptModal from '../ReceiptModal';
 import { buildReceiptHTML } from '@/lib/receiptBuilder';
+import FreeAuthModal from '../Discount/FreeAuthModal';
 
 // 👇 استيراد دالة تصميم الريسيت من الملف المنفصل
 
@@ -36,6 +37,12 @@ export default function DashboardPage() {
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [orderNotes, setOrderNotes] = useState('');
+  const [orderDiscount, setOrderDiscount] = useState(0); // القيمة الافتراضية للخصم
+  const [taxRate, setTaxRate] = useState(14); // ضريبة 14% كمثال
+  const [serviceFee, setServiceFee] = useState(10);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [pendingFreeAmount, setPendingFreeAmount] = useState(0);
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     type: 'single',
@@ -66,11 +73,6 @@ export default function DashboardPage() {
       return [...prevItems, { ...product, qty: 1 }];
     });
   };
-
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.qty, 0);
-  };
-
   const triggerClearCartModal = () => {
     setModalConfig({ isOpen: true, type: 'all', selectedId: null, selectedName: '' });
   };
@@ -132,6 +134,31 @@ export default function DashboardPage() {
     setPaymentInfo(null);
   };
 
+  const handleOpenAuthModal = (amount) => {
+    setPendingFreeAmount(amount);
+    setIsAuthModalOpen(true);
+  };
+  const handleConfirmAuth = (password) => {
+    if (password === '1234') { // استبدليها بباسوورد النظام الفعلي الخاص بك
+      setOrderDiscount(pendingFreeAmount);
+      setIsAuthModalOpen(false);
+      alert('Discount applied successfully!');
+    } else {
+      alert('Incorrect password! Authorization failed.');
+    }
+  };
+
+  // الحسابات المالية للوحة الـ Checkout
+  const calculateSubTotal = () => {
+    return cartItems.reduce((total, item) => total + (item.price * item.qty), 0);
+  };
+
+  const calculateFinalTotal = () => {
+    const subTotal = calculateSubTotal();
+    const taxAmount = subTotal * (taxRate / 100);
+    return Math.max(0, (subTotal + taxAmount + serviceFee) - orderDiscount);
+  };
+
   return (
     <div className="min-h-screen w-full flex flex-col bg-slate-50 text-slate-800 font-sans overflow-y-auto lg:overflow-hidden select-none">
       <Navbar />
@@ -180,11 +207,28 @@ export default function DashboardPage() {
             product={selectedProduct}
             onConfirm={handleConfirmCustomization}
           />
-          <CartSummary total={calculateTotal()} onCheckout={() => { setCheckoutModalOpen(true) }} />
+          <CartSummary
+            subTotal={calculateSubTotal()}
+            taxRate={taxRate}
+            serviceFee={serviceFee}
+            discount={orderDiscount}
+            notes={orderNotes}
+            onNotesChange={setOrderNotes}
+            onApplyDiscount={setOrderDiscount}
+            onOpenAuthModal={handleOpenAuthModal}
+            onCheckout={() => setCheckoutModalOpen(true)}
+          />
+
+          {/* مودال التحقق المنفصل */}
+          <FreeAuthModal
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+            onConfirm={handleConfirmAuth}
+          />
           <CheckoutModal
             isOpen={checkoutModalOpen}
             onClose={() => setCheckoutModalOpen(false)}
-            totalAmount={calculateTotal()}
+            totalAmount={calculateFinalTotal()} // 👈 تم تعديلها هنا لتأخذ الإجمالي الشامل
             onPay={handleProcessPayment}
           />
           <ReceiptModal

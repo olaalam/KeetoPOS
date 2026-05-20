@@ -60,7 +60,7 @@ export default function Navbar() {
 
     const tabClass = (id) =>
         `flex flex-col items-center justify-center min-w-[80px] h-[72px] rounded-xl border transition-all active:scale-[0.98] ${activeTab === id
-            ? 'bg-[#800F17] border-[#800F17] text-white shadow-md shadow-red-950/20'
+            ? 'bg-primary border-primary text-white shadow-md shadow-primary/20'
             : 'border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-slate-800'}`;
 
     return (
@@ -111,7 +111,7 @@ export default function Navbar() {
                     </button>
 
                     {/* Active tab badge on mobile */}
-                    <span className="lg:hidden text-xs font-bold text-[#800F17] bg-red-50 border border-red-100 px-3 py-1 rounded-lg">
+                    <span className="lg:hidden text-xs font-bold text-black bg-primary border border-primary/90 px-3 py-1 rounded-lg">
                         {activeTab}
                     </span>
                 </div>
@@ -125,15 +125,15 @@ export default function Navbar() {
                 <div className="flex items-center gap-2 lg:gap-3">
                     {/* Timer */}
                     <div className="hidden sm:flex flex-col items-center justify-center min-w-[80px] lg:min-w-[90px] h-10 lg:h-[72px] rounded-xl border border-slate-200 bg-slate-50/50 px-2">
-                        <Clock className="h-4 w-4 lg:h-5 lg:w-5 text-red-600 animate-pulse" />
-                        <span className="text-[11px] font-extrabold text-red-600 mt-1 font-mono tracking-wider">{timeString}</span>
+                        <Clock className="h-4 w-4 lg:h-5 lg:w-5 text-primary animate-pulse" />
+                        <span className="text-[11px] font-extrabold text-primary mt-1 font-mono tracking-wider">{timeString}</span>
                     </div>
 
                     {/* Notifications */}
                     <button className="flex flex-col items-center justify-center w-10 h-10 lg:min-w-[76px] lg:h-[72px] rounded-xl border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-slate-800 transition-all active:scale-[0.98]">
                         <div className="relative">
                             <Bell className="h-5 w-5 text-slate-600" />
-                            <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500" />
+                            <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-primary/50" />
                         </div>
                         <span className="hidden lg:block text-[10px] font-bold mt-1.5 uppercase tracking-wider text-slate-400">New</span>
                     </button>
@@ -160,11 +160,11 @@ export default function Navbar() {
                                     <Globe className="h-4 w-4 text-slate-400" /><span>العربية</span>
                                 </button>
                                 <div className="border-t border-slate-100 my-1" />
-                                <button onClick={() => { setShowUserMenu(false); handleCloseShift(); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-rose-50 text-sm font-bold text-red-600 transition-colors text-left">
-                                    <Clock className="h-4 w-4 text-red-500" /><span>Close Shift</span>
+                                <button onClick={() => { setShowUserMenu(false); handleCloseShift(); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-rose-50 text-sm font-bold text-primary transition-colors text-left">
+                                    <Clock className="h-4 w-4 text-primary/50" /><span>Close Shift</span>
                                 </button>
-                                <button onClick={() => { setShowUserMenu(false); handleLogout(); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-rose-50 text-sm font-bold text-red-600 transition-colors text-left">
-                                    <LogOut className="h-4 w-4 text-red-500" /><span>Logout</span>
+                                <button onClick={() => { setShowUserMenu(false); handleLogout(); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-rose-50 text-sm font-bold text-primary transition-colors text-left">
+                                    <LogOut className="h-4 w-4 text-primary/50" /><span>Logout</span>
                                 </button>
                             </div>
                         )}
@@ -177,8 +177,8 @@ export default function Navbar() {
                 <div ref={mobileMenuRef} className="lg:hidden border-t border-slate-100 bg-white px-4 py-3 animate-in fade-in slide-in-from-top-2 duration-150">
                     {/* Timer on mobile */}
                     <div className="flex items-center gap-2 mb-3 sm:hidden">
-                        <Clock className="h-4 w-4 text-red-600 animate-pulse" />
-                        <span className="text-sm font-extrabold text-red-600 font-mono">{timeString}</span>
+                        <Clock className="h-4 w-4 text-primary animate-pulse" />
+                        <span className="text-sm font-extrabold text-primary font-mono">{timeString}</span>
                     </div>
 
                     {/* Tabs Grid */}
@@ -188,7 +188,7 @@ export default function Navbar() {
                                 key={tab.id}
                                 onClick={() => { setActiveTab(tab.id); setShowMobileMenu(false); }}
                                 className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border font-bold text-xs transition-all active:scale-[0.97] ${activeTab === tab.id
-                                    ? 'bg-[#800F17] border-[#800F17] text-white shadow-md shadow-red-950/20'
+                                    ? 'bg-primary border-primary text-white shadow-md shadow-primary/20'
                                     : 'border-slate-200 bg-slate-50 text-slate-500 hover:border-primary'}`}
                             >
                                 {tab.icon}
